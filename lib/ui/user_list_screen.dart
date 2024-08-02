@@ -27,129 +27,159 @@ class _UserListScreenState extends State<UserListScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          surfaceTintColor: const Color(0xFF021033),
-          bottomOpacity: 0.0,
-          elevation: 0.0,
-          shadowColor: const Color(0xFF021033),
-          backgroundColor: const Color(0xFF021033),
-          leading: Container(
-            margin: const EdgeInsets.only(left: 8),
-            child: const CircleAvatar(
-                backgroundColor: Colors.black54,
-                child: ImageAssetWidget(image: ImageAsset.search, height: 50,width: 50,)),
-          ),
-          title: const Text(
-            'Home',
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-          centerTitle: true,
-          actions: const [CircularWidget(image: ImageAsset.userImage)],
-        ),
+        appBar: buildAppBar(),
         body: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [
-                  Color(0xFF020F34),
-                  Color(0xFF011854),
-                ],
-                begin: FractionalOffset(0.0, 0.0),
-                end: FractionalOffset(1.5, 0.0),
-                tileMode: TileMode.decal),
-          ),
-          child: Column(children: [
-            Obx(() {
-              return Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: controller.userProfileData.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin:
-                          const EdgeInsets.only(top: 20, left: 10, right: 8),
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor:
-                                controller.userProfileData[index].color,
-                            maxRadius: 31,
-                            minRadius: 31,
-                            child: CircleAvatar(
-                              maxRadius: 30,
-                              minRadius: 30,
-                              child: Image.asset(
-                                  controller.userProfileData[index].image ??
-                                      ''),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            controller.userProfileData[index].name ?? '',
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              );
-            }),
-            LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-                return Container(
-                    height: MediaQuery.of(context).size.height * 0.65,
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      color: Colors.white,
-                      margin: EdgeInsets.zero,
-                      shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(50),
-                              topLeft: Radius.circular(50))),
-                      child: Column(children: [
-                        const SizedBox(
-                            width: 25,
-                            child: Divider(
-                              thickness: 2,
-                            )),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Obx(() {
-                          return controller.sidebarData.length == 0
-                              ? const CircularProgressIndicator()
-                              : Expanded(
-                                  child: ListView.builder(
-                                    itemCount: controller.sidebarData.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return InkWell(
-                                          onTap: () {
-                                            Get.to(() => ChatScreen(
-                                                  userName: controller
-                                                      .sidebarData[index].name,
-                                                  userId: controller
-                                                      .sidebarData[index].sId,
-                                                ));
-                                          },
-                                          child: buildColumn(context, index));
-                                    },
-                                  ),
-                                );
-                        })
-                      ]),
-                    ));
-              },
-            )
-          ]),
+          decoration: buildBoxDecoration(),
+          child: Column(
+              children: [buildUserProfileWidget(), buildListOfUserWidget()]),
         ),
       ),
     );
   }
 
-  Widget buildColumn(BuildContext context, int index) {
+  LayoutBuilder buildListOfUserWidget() {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        return Container(
+            height: MediaQuery.of(context).size.height * 0.65,
+            width: MediaQuery.of(context).size.width,
+            child: Card(
+              color: Colors.white,
+              margin: EdgeInsets.zero,
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(50),
+                      topLeft: Radius.circular(50))),
+              child: Column(children: [
+                const SizedBox(
+                    width: 25,
+                    child: Divider(
+                      thickness: 2,
+                    )),
+                const SizedBox(
+                  height: 20,
+                ),
+                Obx(() {
+                  return controller.sidebarData.length == 0
+                      ? const CircularProgressIndicator()
+                      : buildListViewWidget();
+                })
+              ]),
+            ));
+      },
+    );
+  }
+
+  Expanded buildListViewWidget() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: controller.sidebarData.length,
+        itemBuilder: (BuildContext context, int index) {
+          return InkWell(
+              onTap: () {
+                Get.to(() => ChatScreen(
+                      userName: controller.sidebarData[index].name,
+                      userId: controller.sidebarData[index].sId,
+                    ));
+              },
+              child: buildUserListTileWidget(context, index));
+        },
+      ),
+    );
+  }
+
+  Obx buildUserProfileWidget() {
+    return Obx(() {
+      return Expanded(
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: controller.userProfileData.length,
+          itemBuilder: (context, index) {
+            return buildListTileUserProfileWidget(index);
+          },
+        ),
+      );
+    });
+  }
+
+  Container buildListTileUserProfileWidget(int index) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20, left: 10, right: 8),
+      child: Column(
+        children: [
+          CircleAvatar(
+            backgroundColor: controller.userProfileData[index].color,
+            maxRadius: 31,
+            minRadius: 31,
+            child: CircleAvatar(
+              maxRadius: 30,
+              minRadius: 30,
+              child: Image.asset(controller.userProfileData[index].image ?? ''),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            controller.userProfileData[index].name ?? '',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration buildBoxDecoration() {
+    return const BoxDecoration(
+      gradient: LinearGradient(
+          colors: [
+            Color(0xFF020F34),
+            Color(0xFF011854),
+          ],
+          begin: FractionalOffset(0.0, 0.0),
+          end: FractionalOffset(1.5, 0.0),
+          tileMode: TileMode.decal),
+    );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      surfaceTintColor: const Color(0xFF021033),
+      bottomOpacity: 0.0,
+      elevation: 0.0,
+      shadowColor: const Color(0xFF021033),
+      backgroundColor: const Color(0xFF021033),
+      leading: appBarLeadingWidget(),
+      title: appBarTitleWidget(),
+      centerTitle: true,
+      actions: appBarActionWidget(),
+    );
+  }
+
+  Container appBarLeadingWidget() {
+    return Container(
+      margin: const EdgeInsets.only(left: 8),
+      child: const CircleAvatar(
+          backgroundColor: Colors.black54,
+          child: ImageAssetWidget(
+            image: ImageAsset.search,
+            height: 50,
+            width: 50,
+          )),
+    );
+  }
+
+  List<Widget> appBarActionWidget() =>
+      const [CircularWidget(image: ImageAsset.userImage)];
+
+  Text appBarTitleWidget() {
+    return const Text(
+      'Home',
+      style: TextStyle(fontSize: 20, color: Colors.white),
+    );
+  }
+
+  Widget buildUserListTileWidget(BuildContext context, int index) {
     return Column(
       children: [
         Padding(

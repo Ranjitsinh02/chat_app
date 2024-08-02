@@ -1,4 +1,5 @@
 import 'package:chat_app/ui/user_list_screen.dart';
+import 'package:chat_app/utils/app_strings.dart';
 import 'package:chat_app/utils/custom_widget/image_asset_widget.dart';
 import 'package:chat_app/utils/image_asset.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       ),
               ),
               Text(
-                "Message",
+                AppStrings.message,
                 style: TextStyle(
                     color: pageIndex == 0
                         ? const Color(0xff031548)
@@ -98,7 +99,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       ),
               ),
               Text(
-                "Calls",
+                AppStrings.calls,
                 style: TextStyle(
                     color: pageIndex == 1 ? Color(0xff031548) : Colors.black38,
                     fontWeight:
@@ -129,7 +130,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       ),
               ),
               Text(
-                "Contacts",
+                AppStrings.contacts,
                 style: TextStyle(
                     color: pageIndex == 2
                         ? const Color(0xff031548)
@@ -162,9 +163,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                       ),
               ),
               Text(
-                "Seetings",
+                AppStrings.settings,
                 style: TextStyle(
-                    color: pageIndex == 3 ? Color(0xff031548) : Colors.black38,
+                    color: pageIndex == 3
+                        ? const Color(0xff031548)
+                        : Colors.black38,
                     fontWeight:
                         pageIndex == 0 ? FontWeight.w800 : FontWeight.w400),
               )
