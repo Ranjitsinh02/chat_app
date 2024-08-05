@@ -101,7 +101,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
               Text(
                 AppStrings.calls,
                 style: TextStyle(
-                    color: pageIndex == 1 ? Color(0xff031548) : Colors.black38,
+                    color: pageIndex == 1 ? const Color(0xff031548) : Colors.black38,
                     fontWeight:
                         pageIndex == 0 ? FontWeight.w800 : FontWeight.w400),
               )
